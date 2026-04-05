@@ -27,3 +27,4 @@ jobs:
           COREINSIGHT_PROVIDER:    ${{ secrets.COREINSIGHT_PROVIDER }}
           COREINSIGHT_MODEL:       ${{ secrets.COREINSIGHT_MODEL }}
           COREINSIGHT_API_KEY:     ${{ secrets.COREINSIGHT_API_KEY }}
+          MODAL_SANDBOX_URL:       ${{ secrets.MODAL_SANDBOX_URL }}
