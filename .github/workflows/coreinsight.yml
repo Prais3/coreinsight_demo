@@ -1,0 +1,29 @@
+name: CoreInsight Performance Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  coreinsight:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run CoreInsight Review
+        uses: docker://ghcr.io/prais3/coreinsight-action:latest
+        env:
+          GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY:       ${{ github.repository }}
+          COREINSIGHT_PR_NUMBER:   ${{ github.event.pull_request.number }}
+          COREINSIGHT_AUTO_PR:     "false"
+          COREINSIGHT_BASE_BRANCH: ${{ github.base_ref }}
+          COREINSIGHT_PROVIDER:    ${{ secrets.COREINSIGHT_PROVIDER }}
+          COREINSIGHT_MODEL:       ${{ secrets.COREINSIGHT_MODEL }}
+          COREINSIGHT_API_KEY:     ${{ secrets.COREINSIGHT_API_KEY }}
+          MODAL_SANDBOX_URL:       ${{ secrets.MODAL_SANDBOX_URL }}
