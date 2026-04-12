@@ -3,10 +3,19 @@ name: CoreInsight Performance Review
 on:
   pull_request:
     types: [opened, synchronize]
+  issue_comment:
+    types: [created]
 
 jobs:
   coreinsight:
     runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'pull_request' ||
+      (
+        github.event_name == 'issue_comment' &&
+        github.event.issue.pull_request != null &&
+        contains(github.event.comment.body, '/coreinsight verify')
+      )
     permissions:
       contents: write
       pull-requests: write
@@ -20,7 +29,8 @@ jobs:
         env:
           GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY:       ${{ github.repository }}
-          COREINSIGHT_PR_NUMBER:   ${{ github.event.pull_request.number }}
+          GITHUB_EVENT_NAME:       ${{ github.event_name }}
+          COREINSIGHT_PR_NUMBER:   ${{ github.event_name == 'issue_comment' && github.event.issue.number || github.event.pull_request.number }}
           COREINSIGHT_AUTO_PR:     "false"
           COREINSIGHT_BASE_BRANCH: ${{ github.base_ref }}
           COREINSIGHT_PROVIDER:    ${{ secrets.COREINSIGHT_PROVIDER }}
